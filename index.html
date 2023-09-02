@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Investment Simulator</h1>
+        <div class="player-info">
+            <p>Balance: $<span id="balance">10000.00</span></p>
+            <div id="avatar" class="avatar"></div>
+            <p>Avatar Cost: $<span id="avatarCost">100</span></p>
+            <p id="selectedStock">Selected Stock: AAPL ($150.00)</p>
+            <p id="stocksOwned">Stocks Owned: 0</p>
+        </div>
+        <div class="stock-market">
+            <!-- Stock information will be added dynamically -->
+        </div>
+        <button id="buyButton">Buy Stock</button>
+        <button id="sellButton">Sell Stock</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
