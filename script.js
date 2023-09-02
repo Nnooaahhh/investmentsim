@@ -85,3 +85,56 @@ function generateStockList() {
 }
 
 generateStockList();
+// Function to update stock prices periodically
+function updateStockPrices() {
+    for (let i = 0; i < stocks.length; i++) {
+        // Simulate price fluctuations (you can adjust this logic)
+        const priceChange = (Math.random() - 0.5) * 10;
+        stocks[i].price += priceChange;
+
+        // Ensure stock prices stay positive
+        if (stocks[i].price < 1) {
+            stocks[i].price = 1;
+        }
+    }
+}
+
+// Function to update the stock chart
+function updateStockChart() {
+    const stockChart = document.getElementById("stockChart");
+    stockChart.innerHTML = "";
+
+    for (let i = 0; i < stocks.length; i++) {
+        const stock = stocks[i];
+        const stockBar = document.createElement("div");
+        stockBar.className = "stock-bar";
+        stockBar.style.height = `${(stock.price / 50).toFixed(2)}px`;
+        stockBar.style.backgroundColor = getRandomColor();
+        stockChart.appendChild(stockBar);
+    }
+}
+
+// Generate a random color for the stock bars
+function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+// Update stock information, chart, and balance periodically
+setInterval(() => {
+    updateStockPrices();
+    updateStockInfo(selectedStock);
+    updateStockChart();
+}, 5000); // Adjust the interval as needed (e.g., 5000ms = 5 seconds)
+
+// ... (remaining code, including event listeners)
+
+// Initialize player info, stock list, and stock chart
+updatePlayerInfo();
+generateStockList();
+updateStockChart();
+
