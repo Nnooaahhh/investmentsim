@@ -22,6 +22,13 @@ let selectedAvatar = 0;
 let stocks = [
     { name: "AAPL", price: 150.0, quantity: 0 },
     { name: "GOOGL", price: 2700.0, quantity: 0 },
+    { name: "CTXR", price: 5.0, quantity: 0 },
+    { name: "MARK", price: 3.0, quantity: 0 },
+    { name: "SIRI", price: 6.0, quantity: 0 },
+    { name: "GOLD", price: 1800.0, quantity: 0 },
+    { name: "SILVER", price: 25.0, quantity: 0 },
+    { name: "COTTON", price: 0.8, quantity: 0 },
+    { name: "BRIDGEWATER", price: 50.0, quantity: 0 },
     // Add more stock data here
 ];
 
@@ -101,23 +108,6 @@ function updateStockChart() {
         stockItem.appendChild(stockName);
         stockItem.appendChild(stockPrice);
         stockChart.appendChild(stockItem);
-    }
-}
-
-// Update stock chart initially
-updateStockChart();
-
-// Function to update stock prices randomly
-function updateStockPrices() {
-    for (let i = 0; i < stocks.length; i++) {
-        // Simulate price fluctuations (you can adjust this logic)
-        const priceChange = (Math.random() - 0.5) * 10;
-        stocks[i].price += priceChange;
-
-        // Ensure stock prices stay positive
-        if (stocks[i].price < 1) {
-            stocks[i].price = 1;
-        }
     }
 }
 
