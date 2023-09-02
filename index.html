@@ -14,13 +14,17 @@
             <p>Balance: $<span id="balance">10000.00</span></p>
             <div id="avatar" class="avatar"></div>
             <p>Avatar Cost: $<span id="avatarCost">100</span></p>
-            <p id="selectedStock">Selected Stock: AAPL ($150.00)</p>
+            <p id="selectedStock">Selected Stock: <span id="selectedStockName">AAPL</span> (<span id="selectedStockPrice">150.00</span>)</p>
             <p id="stocksOwned">Stocks Owned: 0</p>
         </div>
         <div class="actions">
             <button id="buyButton">Buy Stock</button>
             <button id="sellButton">Sell Stock</button>
             <button id="buyAvatarButton">Buy Avatar</button>
+        </div>
+        <div class="stock-list-container">
+            <label for="stockList">Select Stock:</label>
+            <select id="stockList"></select>
         </div>
     </div>
     <div class="stock-chart-container">
