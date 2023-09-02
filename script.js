@@ -3,12 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const playerBalanceElement = document.getElementById("balance");
     const avatarElement = document.getElementById("avatar");
     const avatarCostElement = document.getElementById("avatarCost");
-    const selectedStockElement = document.getElementById("selectedStock");
+    const selectedStockNameElement = document.getElementById("selectedStockName");
+    const selectedStockPriceElement = document.getElementById("selectedStockPrice");
     const stocksOwnedElement = document.getElementById("stocksOwned");
     const buyButton = document.getElementById("buyButton");
     const sellButton = document.getElementById("sellButton");
     const buyAvatarButton = document.getElementById("buyAvatarButton");
-    const stockList = document.querySelector(".stock-list");
+    const stockList = document.getElementById("stockList");
     const stockChart = new Chart(document.getElementById("stockLineChart").getContext("2d"), {
         type: "line",
         data: {
@@ -64,14 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Add more stock data here
     ];
 
-    let selectedStock = 0;
-
     // Function to update the player's information
     function updatePlayerInfo() {
         playerBalanceElement.textContent = playerBalance.toFixed(2);
         avatarElement.style.backgroundImage = `url(${avatars[selectedAvatar]})`;
         avatarCostElement.textContent = avatarCosts[selectedAvatar].toFixed(2);
-        selectedStockElement.textContent = `Selected Stock: ${stocks[selectedStock].name} ($${stocks[selectedStock].price.toFixed(2)})`;
+        selectedStockNameElement.textContent = stocks[selectedStock].name;
+        selectedStockPriceElement.textContent = stocks[selectedStock].price.toFixed(2);
         stocksOwnedElement.textContent = `Stocks Owned: ${stocks[selectedStock].quantity}`;
     }
 
@@ -106,6 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const avatarCost = avatarCosts[selectedAvatar];
         if (playerBalance >= avatarCost) {
             playerBalance -= avatarCost;
+            selectedAvatar += 1;
+            if (selectedAvatar >= avatars.length) {
+                selectedAvatar = 0;
+            }
             updatePlayerInfo();
         }
     }
@@ -137,9 +141,27 @@ document.addEventListener("DOMContentLoaded", () => {
         stockChart.update();
     }
 
+    // Initialize stock list dropdown
+    function initializeStockList() {
+        stockList.innerHTML = "";
+        stocks.forEach((stock, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.text = `${stock.name} ($${stock.price.toFixed(2)})`;
+            stockList.appendChild(option);
+        });
+    }
+
+    // Event listener for changing the selected stock
+    stockList.addEventListener("change", (event) => {
+        selectedStock = parseInt(event.target.value);
+        updatePlayerInfo();
+    });
+
     // Function to initialize the application
     function initApp() {
         updatePlayerInfo();
+        initializeStockList();
         updateStockChart();
         setInterval(() => {
             updateStockPrices();
