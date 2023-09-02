@@ -1,0 +1,9 @@
+InvestmentSimulator/
+├── src/
+│   ├── main.py
+│   ├── game_logic.py
+│   └── other_python_files.py
+├── assets/
+│   ├── images/
+│   └── sounds/
+└── README.md
