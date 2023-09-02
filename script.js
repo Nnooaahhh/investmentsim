@@ -14,24 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "line",
         data: {
             labels: [], // Stock labels will be added dynamically
-            datasets: [{
-                label: "Stock Prices",
-                data: [], // Stock prices will be added dynamically
-                backgroundColor: "rgba(52, 152, 219, 0.2)",
-                borderColor: "rgba(52, 152, 219, 1)",
-                borderWidth: 2,
-                pointRadius: 4,
-                pointBackgroundColor: "rgba(52, 152, 219, 1)",
-                fill: true,
-            }]
+            datasets: [],
         },
         options: {
             scales: {
                 x: {
-                    display: false, // Hide x-axis
+                    display: false,
                 },
                 y: {
-                    beginAtZero: false, // Allow negative values
+                    beginAtZero: false,
                     title: {
                         display: true,
                         text: "Stock Prices ($)",
@@ -131,42 +122,76 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to create the stock chart using Chart.js
-    function updateStockChart() {
+    // Function to create and update the stock chart using Chart.js
+    function createOrUpdateStockChart() {
         const stockLabels = stocks.map(stock => stock.name);
-        const stockPrices = stocks.map(stock => stock.price);
 
-        stockChart.data.labels = stockLabels;
-        stockChart.data.datasets[0].data = stockPrices;
+        if (stockChart.data.labels.length === 0) {
+            stockChart.data.labels = stockLabels;
+
+            for (let i = 0; i < stocks.length; i++) {
+                const color = getRandomColor();
+                stockChart.data.datasets.push({
+                    label: stocks[i].name,
+                    data: [],
+                    borderColor: color,
+                    backgroundColor: color,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                });
+            }
+        }
+
+        for (let i = 0; i < stocks.length; i++) {
+            stockChart.data.datasets[i].data.push(stocks[i].price);
+
+            if (stockChart.data.datasets[i].data.length > 30) {
+                stockChart.data.datasets[i].data.shift();
+            }
+        }
+
         stockChart.update();
     }
 
-    // Initialize stock list dropdown
-    function initializeStockList() {
-        stockList.innerHTML = "";
-        stocks.forEach((stock, index) => {
-            const option = document.createElement("option");
-            option.value = index;
-            option.text = `${stock.name} ($${stock.price.toFixed(2)})`;
-            stockList.appendChild(option);
-        });
+    // Function to generate a random color
+    function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 
-    // Event listener for changing the selected stock
-    stockList.addEventListener("change", (event) => {
-        selectedStock = parseInt(event.target.value);
-        updatePlayerInfo();
-    });
+    // Function to create and update the legend
+    function createOrUpdateLegend() {
+        const legendList = document.getElementById("legendList");
+        legendList.innerHTML = "";
+
+        for (let i = 0; i < stocks.length; i++) {
+            const stock = stocks[i];
+            const color = stockChart.data.datasets[i].borderColor;
+
+            const legendItem = document.createElement("li");
+            legendItem.innerHTML = `
+                <span class="legend-color" style="background-color: ${color};"></span>
+                ${stock.name}
+            `;
+
+            legendList.appendChild(legendItem);
+        }
+    }
 
     // Function to initialize the application
     function initApp() {
         updatePlayerInfo();
         initializeStockList();
-        updateStockChart();
         setInterval(() => {
             updateStockPrices();
-            updateStockChart();
-        }, 1000); // Update stock prices and chart every 1 second
+            createOrUpdateStockChart();
+            createOrUpdateLegend();
+        }, 1000); // Update stock prices, chart, and legend every 1 second
     }
 
     // Initialize the application
