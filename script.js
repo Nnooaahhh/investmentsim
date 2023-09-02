@@ -7,11 +7,13 @@ const stocksOwnedElement = document.getElementById("stocksOwned");
 const buyButton = document.getElementById("buyButton");
 const sellButton = document.getElementById("sellButton");
 const buyAvatarButton = document.getElementById("buyAvatarButton");
+const stockList = document.querySelector(".stock-list");
+const stockChart = document.getElementById("stockChart");
 
 // Player data
 let playerBalance = 10000;
 let avatars = [
-    "https://www.nicepng.com/png/detail/348-3483446_2d-character-design-wassermolekl.png",  // Replace with your image file paths
+    "https://www.nicepng.com/png/detail/348-3483446_2d-character-design-wassermolekl.png",
     "https://opengameart.org/sites/default/files/player_19.png",
     "https://www.pngitem.com/pimgs/m/190-1906083_2d-girl-character-png-transparent-png.png",
 ];
@@ -65,7 +67,6 @@ function sellStock() {
 
 // Event listeners for Buy and Sell buttons
 buyButton.addEventListener("click", buyStock);
-
 sellButton.addEventListener("click", sellStock);
 
 // Function to handle purchasing avatars
@@ -80,37 +81,52 @@ function purchaseAvatar() {
 // Event listener for Buy Avatar button
 buyAvatarButton.addEventListener("click", purchaseAvatar);
 
-// Function to update stock prices periodically every 1 second
-setInterval(() => {
-    updateStockPrices();
-    updateStockInfo(selectedStock);
-    updateStockChart();
-}, 1000); // Updated interval to 1 second
+// Function to update stock prices randomly
+function updateStockPrices() {
+    for (let i = 0; i < stocks.length; i++) {
+        // Simulate price fluctuations (you can adjust this logic)
+        const priceChange = (Math.random() - 0.5) * 10;
+        stocks[i].price += priceChange;
+
+        // Ensure stock prices stay positive
+        if (stocks[i].price < 1) {
+            stocks[i].price = 1;
+        }
+    }
+}
 
 // Function to create the stock chart
 function updateStockChart() {
-    const stockChart = document.getElementById("stockChart");
     stockChart.innerHTML = "";
 
     for (let i = 0; i < stocks.length; i++) {
         const stock = stocks[i];
-        const stockItem = document.createElement("div");
-        stockItem.className = "stock-item";
+        const stockItem = document.createElement("li");
+        stockItem.textContent = `${stock.name} ($${stock.price.toFixed(2)})`;
+        stockItem.dataset.index = i;
 
-        const stockName = document.createElement("div");
-        stockName.className = "stock-name";
-        stockName.textContent = stock.name;
-
-        const stockPrice = document.createElement("div");
-        stockPrice.className = "stock-price";
-        stockPrice.textContent = `$${stock.price.toFixed(2)}`;
-
-        stockItem.appendChild(stockName);
-        stockItem.appendChild(stockPrice);
-        stockChart.appendChild(stockItem);
+        stockList.appendChild(stockItem);
     }
 }
 
-// Initialize player info, stock list, and stock chart
-updatePlayerInfo();
-generateStockList();
+// Event listener for selecting different stocks
+stockList.addEventListener("click", (event) => {
+    const selectedIndex = event.target.dataset.index;
+    if (selectedIndex !== undefined) {
+        selectedStock = parseInt(selectedIndex);
+        updatePlayerInfo();
+    }
+});
+
+// Function to initialize the application
+function initApp() {
+    updatePlayerInfo();
+    updateStockChart();
+    setInterval(() => {
+        updateStockPrices();
+        updateStockChart();
+    }, 1000); // Update stock prices every 1 second
+}
+
+// Initialize the application
+initApp();
