@@ -1,97 +1,68 @@
-import pygame
-import random
+// JavaScript code for investment simulator
 
-# Initialize Pygame
-pygame.init()
+// Constants
+const playerBalanceElement = document.getElementById("balance");
+const avatarElement = document.getElementById("avatar");
+const avatarCostElement = document.getElementById("avatarCost");
+const selectedStockElement = document.getElementById("selectedStock");
+const stocksOwnedElement = document.getElementById("stocksOwned");
+const buyButton = document.getElementById("buyButton");
+const sellButton = document.getElementById("sellButton");
 
-# Constants
-WIDTH, HEIGHT = 800, 600
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-FONT = pygame.font.Font(None, 36)
+// Player data
+let playerBalance = 10000;
+let avatars = [
+    "avatar1.png",  // Replace with your image file paths
+    "avatar2.png",
+    "avatar3.png",
+];
+let avatarCosts = [100, 200, 300];
+let selectedAvatar = 0;
 
-# Player data
-player_balance = 10000
-avatars = [
-    pygame.image.load("avatar1.png"),  # Replace with your image file paths
-    pygame.image.load("avatar2.png"),
-    pygame.image.load("avatar3.png"),
-]
-avatar_costs = [100, 200, 300]
-selected_avatar = 0
+// Stock data (same as before)
+// ...
 
-# Stock data (same as before)
-stocks = [
-    {"name": "AAPL", "price": 150.0, "quantity": 0},
-    {"name": "GOOGL", "price": 2700.0, "quantity": 0},
-    # Add more stocks, penny stocks, commodities, etc.
-]
+// Function to update the player's information
+function updatePlayerInfo() {
+    playerBalanceElement.textContent = playerBalance.toFixed(2);
+    avatarElement.style.backgroundImage = `url(${avatars[selectedAvatar]})`;
+    avatarCostElement.textContent = avatarCosts[selectedAvatar].toFixed(2);
+}
 
-# Function to update stock prices (same as before)
-# ...
+// Function to handle buying stock
+function buyStock(stockIndex) {
+    const stock = stocks[stockIndex];
+    if (playerBalance >= stock.price) {
+        stock.quantity += 1;
+        playerBalance -= stock.price;
+        updatePlayerInfo();
+        updateStockInfo(stockIndex);
+    }
+}
 
-# Function to buy stocks (same as before)
-# ...
+// Function to handle selling stock
+function sellStock(stockIndex) {
+    const stock = stocks[stockIndex];
+    if (stock.quantity > 0) {
+        stock.quantity -= 1;
+        playerBalance += stock.price;
+        updatePlayerInfo();
+        updateStockInfo(stockIndex);
+    }
+}
 
-# Function to sell stocks (same as before)
-# ...
+// Function to update stock information (same as before)
+// ...
 
-# Function to purchase an avatar
-def purchase_avatar(avatar_index):
-    global player_balance, selected_avatar
-    cost = avatar_costs[avatar_index]
-    if player_balance >= cost:
-        selected_avatar = avatar_index
-        player_balance -= cost
+// Event listeners for Buy and Sell buttons
+buyButton.addEventListener("click", () => {
+    buyStock(selectedStock);
+});
 
-# Initialize Pygame window
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Investment Simulator")
+sellButton.addEventListener("click", () => {
+    sellStock(selectedStock);
+});
 
-# Main game loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                running = False
-            elif event.key == pygame.K_LEFT:
-                selected_avatar = (selected_avatar - 1) % len(avatars)
-            elif event.key == pygame.K_RIGHT:
-                selected_avatar = (selected_avatar + 1) % len(avatars)
-            elif event.key == pygame.K_b:
-                buy_stock(selected_stock)
-            elif event.key == pygame.K_s:
-                sell_stock(selected_stock)
-            elif event.key == pygame.K_p:
-                purchase_avatar(selected_avatar)
-
-    update_stock_prices()
-    selected_stock = pygame.mouse.get_pos()[0] // (WIDTH // len(stocks))
-
-    # Clear the screen
-    screen.fill(WHITE)
-
-    # Display player info
-    balance_text = FONT.render(f"Balance: ${player_balance:.2f}", True, BLACK)
-    avatar_rect = avatars[selected_avatar]
-    screen.blit(avatar_rect, (20, 20))
-    avatar_cost_text = FONT.render(f"Avatar Cost: ${avatar_costs[selected_avatar]}", True, BLACK)
-    stock_info_text = FONT.render(f"Selected Stock: {stocks[selected_stock]['name']} (${stocks[selected_stock]['price']:.2f})", True, BLACK)
-    stocks_owned_text = FONT.render(f"Stocks Owned: {stocks[selected_stock]['quantity']}", True, BLACK)
-
-    screen.blit(balance_text, (20, 250))
-    screen.blit(avatar_cost_text, (20, 300))
-    screen.blit(stock_info_text, (20, 350))
-    screen.blit(stocks_owned_text, (20, 400))
-
-    # Display stock information (same as before)
-    # ...
-
-    # Update the display
-    pygame.display.flip()
-
-# Quit Pygame
-pygame.quit()
+// Initialize player info and stock info
+updatePlayerInfo();
+updateStockInfo(selectedStock);
