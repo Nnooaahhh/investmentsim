@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         type: "line",
         data: {
             labels: [], // Stock labels will be added dynamically
-            datasets: [],
+            datasets: [], // Stock datasets will be added dynamically
         },
         options: {
             scales: {
@@ -126,31 +126,23 @@ document.addEventListener("DOMContentLoaded", () => {
     function createOrUpdateStockChart() {
         const stockLabels = stocks.map(stock => stock.name);
 
-        if (stockChart.data.labels.length === 0) {
-            stockChart.data.labels = stockLabels;
-
-            for (let i = 0; i < stocks.length; i++) {
-                const color = getRandomColor();
-                stockChart.data.datasets.push({
-                    label: stocks[i].name,
-                    data: [],
-                    borderColor: color,
-                    backgroundColor: color,
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    fill: false,
-                });
-            }
-        }
+        // Clear existing datasets
+        stockChart.data.datasets = [];
 
         for (let i = 0; i < stocks.length; i++) {
-            stockChart.data.datasets[i].data.push(stocks[i].price);
-
-            if (stockChart.data.datasets[i].data.length > 30) {
-                stockChart.data.datasets[i].data.shift();
-            }
+            const color = getRandomColor();
+            stockChart.data.datasets.push({
+                label: stocks[i].name,
+                data: stocks[i].priceHistory,
+                borderColor: color,
+                backgroundColor: color,
+                borderWidth: 2,
+                pointRadius: 0,
+                fill: false,
+            });
         }
 
+        stockChart.data.labels = stockLabels;
         stockChart.update();
     }
 
@@ -164,34 +156,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return color;
     }
 
-    // Function to create and update the legend
-    function createOrUpdateLegend() {
-        const legendList = document.getElementById("legendList");
-        legendList.innerHTML = "";
-
-        for (let i = 0; i < stocks.length; i++) {
-            const stock = stocks[i];
-            const color = stockChart.data.datasets[i].borderColor;
-
-            const legendItem = document.createElement("li");
-            legendItem.innerHTML = `
-                <span class="legend-color" style="background-color: ${color};"></span>
-                ${stock.name}
-            `;
-
-            legendList.appendChild(legendItem);
-        }
-    }
-
     // Function to initialize the application
     function initApp() {
         updatePlayerInfo();
         initializeStockList();
+
+        // Initialize stock price history
+        stocks.forEach(stock => {
+            stock.priceHistory = [];
+        });
+
         setInterval(() => {
             updateStockPrices();
-            createOrUpdateStockChart();
-            createOrUpdateLegend();
-        }, 1000); // Update stock prices, chart, and legend every 1 second
+            updateStockChart();
+        }, 1000); // Update stock prices and chart every 1 second
     }
 
     // Initialize the application
