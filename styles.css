@@ -33,14 +33,8 @@ h1 {
     margin: 10px auto;
 }
 
-.stock-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.stock-list li {
-    cursor: pointer;
-    padding: 5px;
+.actions {
+    margin-top: 20px;
 }
 
 button {
@@ -50,7 +44,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 0 10px;
 }
 
 button:hover {
@@ -63,15 +57,22 @@ button:hover {
     margin-top: 20px;
 }
 
-.stock-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+.stock-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.stock-list li {
+    cursor: pointer;
     padding: 5px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    margin: 5px;
+}
+
+.stock-list li:hover {
+    background-color: #e0e0e0;
 }
 
 .stock-name {
