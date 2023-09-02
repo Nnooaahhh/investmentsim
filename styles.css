@@ -54,3 +54,21 @@ button {
 button:hover {
     background-color: #2980b9;
 }
+
+.stock-chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+    height: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.stock-bar {
+    width: 20px;
+    margin: 0 5px;
+    transition: height 0.5s;
+}
+
+
