@@ -9,7 +9,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const sellButton = document.getElementById("sellButton");
     const buyAvatarButton = document.getElementById("buyAvatarButton");
     const stockList = document.querySelector(".stock-list");
-    const stockChart = document.getElementById("stockLineChart").getContext("2d");
+    const stockChart = new Chart(document.getElementById("stockLineChart").getContext("2d"), {
+        type: "line",
+        data: {
+            labels: [], // Stock labels will be added dynamically
+            datasets: [{
+                label: "Stock Prices",
+                data: [], // Stock prices will be added dynamically
+                backgroundColor: "rgba(52, 152, 219, 0.2)",
+                borderColor: "rgba(52, 152, 219, 1)",
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: "rgba(52, 152, 219, 1)",
+                fill: true,
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    display: false, // Hide x-axis
+                },
+                y: {
+                    beginAtZero: false, // Allow negative values
+                    title: {
+                        display: true,
+                        text: "Stock Prices ($)",
+                    },
+                },
+            },
+        },
+    });
 
     // Player data
     let playerBalance = 10000;
@@ -53,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
             stock.quantity += 1;
             playerBalance -= stock.price;
             updatePlayerInfo();
+            updateStockChart();
         }
     }
 
@@ -63,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
             stock.quantity -= 1;
             playerBalance += stock.price;
             updatePlayerInfo();
+            updateStockChart();
         }
     }
 
@@ -97,51 +128,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Function to create the stock chart using Chart.js
-    function createStockChart() {
+    function updateStockChart() {
         const stockLabels = stocks.map(stock => stock.name);
         const stockPrices = stocks.map(stock => stock.price);
 
-        new Chart(stockChart, {
-            type: "line",
-            data: {
-                labels: stockLabels,
-                datasets: [
-                    {
-                        label: "Stock Prices",
-                        data: stockPrices,
-                        backgroundColor: "rgba(52, 152, 219, 0.2)",
-                        borderColor: "rgba(52, 152, 219, 1)",
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: "rgba(52, 152, 219, 1)",
-                    },
-                ],
-            },
-            options: {
-                scales: {
-                    x: {
-                        display: false, // Hide x-axis
-                    },
-                    y: {
-                        beginAtZero: false, // Allow negative values
-                        title: {
-                            display: true,
-                            text: "Stock Prices ($)",
-                        },
-                    },
-                },
-            },
-        });
+        stockChart.data.labels = stockLabels;
+        stockChart.data.datasets[0].data = stockPrices;
+        stockChart.update();
     }
 
     // Function to initialize the application
     function initApp() {
         updatePlayerInfo();
+        updateStockChart();
         setInterval(() => {
             updateStockPrices();
-            updatePlayerInfo();
-        }, 1000); // Update stock prices every 1 second
-        createStockChart();
+            updateStockChart();
+        }, 1000); // Update stock prices and chart every 1 second
     }
 
     // Initialize the application
